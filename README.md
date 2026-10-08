@@ -12,12 +12,12 @@ here. This plug-in provides the equivalent workflow instead:
 ```sh
 ibmcloud cr login --client docker      # existing, built into the cr plug-in
 ibmcloud cr login --client podman      # existing, built into the cr plug-in
-ibmcloud cr-container login            # this plug-in, for Apple's container CLI
+ibmcloud crc login                     # this plug-in (alias: cr-container)
 ```
 
 ## What it does
 
-`ibmcloud cr-container login`:
+`ibmcloud crc login` (or `ibmcloud cr-container login`):
 
 1. Confirms you are logged in to IBM Cloud (`ibmcloud login`) or that you
    supplied an API key via `--iam-api-key`.
@@ -31,6 +31,8 @@ ibmcloud cr-container login            # this plug-in, for Apple's container CLI
 ## Usage
 
 ```sh
+ibmcloud crc login [-r REGISTRY] [--iam-api-key API_KEY]
+# or
 ibmcloud cr-container login [-r REGISTRY] [--iam-api-key API_KEY]
 ```
 
