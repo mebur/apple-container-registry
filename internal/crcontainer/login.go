@@ -92,9 +92,9 @@ func runLogin(c plugin.PluginContext, ui terminal.UI, args []string) error {
 
 	// Ask the user if they wish to authorize the Apple container CLI and daemon in macOS Keychain
 	// to avoid non-interactive Keychain authorization errors (-25293) on image push/pull.
-	var authorizeKeychain bool
+	authorizeKeychain := true
 	promptErr := ui.Prompt(
-		"Authorize Apple container binaries (/usr/local/bin/container*) to access this credential in Keychain without prompts? [Y/n]",
+		"Authorize Apple container binaries (/usr/local/bin/container*) to access this credential in Keychain without prompts?",
 		nil,
 	).Resolve(&authorizeKeychain)
 
