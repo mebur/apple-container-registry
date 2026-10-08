@@ -1,0 +1,34 @@
+module github.com/patrikranudd/ibmcloud-cr-apple-container
+
+go 1.27.1
+
+require (
+	github.com/IBM-Cloud/ibm-cloud-cli-sdk v1.13.2
+	github.com/spf13/pflag v1.0.10
+)
+
+require (
+	github.com/Masterminds/semver v1.5.0 // indirect
+	github.com/clipperhouse/uax29/v2 v2.2.0 // indirect
+	github.com/fatih/color v1.19.0 // indirect
+	github.com/fatih/structs v1.1.0 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.15 // indirect
+	github.com/go-playground/locales v0.14.1 // indirect
+	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-playground/validator/v10 v10.30.5 // indirect
+	github.com/gofrs/flock v0.13.1 // indirect
+	github.com/google/uuid v1.6.0 // indirect
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/jedib0t/go-pretty/v6 v6.8.3 // indirect
+	github.com/leodido/go-urn v1.5.0 // indirect
+	github.com/mattn/go-colorable v0.1.15 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/mattn/go-runewidth v0.0.30 // indirect
+	github.com/nicksnyder/go-i18n/v2 v2.6.1 // indirect
+	github.com/spf13/cobra v1.10.2 // indirect
+	go.yaml.in/yaml/v2 v2.4.4 // indirect
+	golang.org/x/crypto v0.57.0 // indirect
+	golang.org/x/sys v0.48.0 // indirect
+	golang.org/x/term v0.46.0 // indirect
+	golang.org/x/text v0.42.0 // indirect
+)
