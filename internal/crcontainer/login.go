@@ -59,7 +59,8 @@ func runLogin(c plugin.PluginContext, ui terminal.UI, args []string) error {
 			terminal.CommandColor("ibmcloud login"), terminal.CommandColor("--iam-api-key"))
 	}
 
-	if _, err := exec.LookPath(containerBinary); err != nil {
+	containerPath, err := exec.LookPath(containerBinary)
+	if err != nil {
 		return fmt.Errorf(
 			"the Apple container CLI was not found on the PATH.\n"+
 				"Install it from %s and try again.",
@@ -87,6 +88,23 @@ func runLogin(c plugin.PluginContext, ui terminal.UI, args []string) error {
 
 	if err := containerRegistryLogin(domain, username, password); err != nil {
 		return err
+	}
+
+	// Ask the user if they wish to authorize the Apple container CLI and daemon in macOS Keychain
+	// to avoid non-interactive Keychain authorization errors (-25293) on image push/pull.
+	var authorizeKeychain bool
+	promptErr := ui.Prompt(
+		"Authorize Apple container binaries (/usr/local/bin/container*) to access this credential in Keychain without prompts? [Y/n]",
+		nil,
+	).Resolve(&authorizeKeychain)
+
+	// If prompt succeeded and user confirmed (or pressed enter/default), configure access control
+	if promptErr == nil && authorizeKeychain {
+		if err := authorizeKeychainAccess(domain, username, password, containerPath); err != nil {
+			ui.Warn("Warning: Could not configure Keychain access list: %s", err.Error())
+		} else {
+			ui.Say("Keychain access configured for container CLI.")
+		}
 	}
 
 	ui.Ok()
@@ -126,6 +144,50 @@ func containerRegistryLoginWithBinary(binary, domain, username, password string)
 			msg = err.Error()
 		}
 		return fmt.Errorf("%s %s failed: %s", containerBinary, "registry login", msg)
+	}
+
+	return nil
+}
+
+// authorizeKeychainAccess updates the Keychain internet-password entry with
+// trusted application paths (e.g. /usr/local/bin/container and /usr/local/bin/container-apiserver)
+// so the daemon and CLI can access the registry credentials without encountering
+// non-interactive authorization errors (-25293).
+func authorizeKeychainAccess(domain, username, password, containerPath string) error {
+	securityBin, err := exec.LookPath("security")
+	if err != nil {
+		return err
+	}
+
+	args := []string{
+		"add-internet-password",
+		"-a", username,
+		"-s", domain,
+		"-w", password,
+		"-d", "com.apple.container.registry",
+		"-U",
+	}
+
+	if containerPath != "" {
+		args = append(args, "-T", containerPath)
+	}
+
+	// Also add container-apiserver if present in same directory
+	apiServerPath, err := exec.LookPath("container-apiserver")
+	if err == nil && apiServerPath != "" {
+		args = append(args, "-T", apiServerPath)
+	}
+
+	cmd := exec.Command(securityBin, args...)
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+
+	if err := cmd.Run(); err != nil {
+		msg := strings.TrimSpace(stderr.String())
+		if msg == "" {
+			msg = err.Error()
+		}
+		return fmt.Errorf("security command failed: %s", msg)
 	}
 
 	return nil
