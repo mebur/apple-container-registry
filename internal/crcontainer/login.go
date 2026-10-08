@@ -150,7 +150,7 @@ func containerRegistryLoginWithBinary(binary, domain, username, password string)
 }
 
 // authorizeKeychainAccess updates the Keychain internet-password entry with
-// trusted application paths (e.g. /usr/local/bin/container and /usr/local/bin/container-apiserver)
+// trusted application paths (including container-core-images and container-runtime-linux)
 // so the daemon and CLI can access the registry credentials without encountering
 // non-interactive authorization errors (-25293).
 func authorizeKeychainAccess(domain, username, password, containerPath string) error {
@@ -168,14 +168,20 @@ func authorizeKeychainAccess(domain, username, password, containerPath string) e
 		"-U",
 	}
 
-	if containerPath != "" {
-		args = append(args, "-T", containerPath)
+	trustedApps := []string{
+		containerPath,
+		"/usr/local/bin/container",
+		"/usr/local/bin/container-apiserver",
+		"/usr/local/libexec/container/plugins/container-core-images/bin/container-core-images",
+		"/usr/local/libexec/container/plugins/container-runtime-linux/bin/container-runtime-linux",
 	}
 
-	// Also add container-apiserver if present in same directory
-	apiServerPath, err := exec.LookPath("container-apiserver")
-	if err == nil && apiServerPath != "" {
-		args = append(args, "-T", apiServerPath)
+	seen := make(map[string]bool)
+	for _, app := range trustedApps {
+		if app != "" && !seen[app] {
+			seen[app] = true
+			args = append(args, "-T", app)
+		}
 	}
 
 	cmd := exec.Command(securityBin, args...)
