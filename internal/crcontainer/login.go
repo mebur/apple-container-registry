@@ -42,7 +42,7 @@ var registryDomains = map[string]string{
 // dedicated registry domain.
 const defaultRegistryDomain = "icr.io"
 
-// runLogin implements `ibmcloud cr-container login`. It authenticates
+// runLogin implements `ibmcloud apple-container login`. It authenticates
 // Apple's `container` CLI against IBM Cloud Container Registry using the
 // IAM bearer token of the current CLI session, mirroring the behavior of
 // `ibmcloud cr login --client docker` / `--client podman`.

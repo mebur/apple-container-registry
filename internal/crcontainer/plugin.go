@@ -12,9 +12,9 @@ import (
 )
 
 const (
-	pluginName  = "cr-container"
-	aliasName   = "crc"
-	namespace   = "cr-container"
+	pluginName  = "apple-container"
+	aliasName   = "acr"
+	namespace   = "apple-container"
 	loginCmd    = "login"
 	versionMaj  = 0
 	versionMin  = 1
@@ -47,8 +47,8 @@ func (p *Plugin) GetMetadata() plugin.PluginMetadata {
 				Namespace:   namespace,
 				Name:        loginCmd,
 				Description: "Log Apple's container CLI in to IBM Cloud Container Registry",
-				Usage: "ibmcloud cr-container login [-r REGISTRY] [--iam-api-key API_KEY]\n" +
-					"   ibmcloud crc login [-r REGISTRY] [--iam-api-key API_KEY]\n\n" +
+				Usage: "ibmcloud apple-container login [-r REGISTRY] [--iam-api-key API_KEY]\n" +
+					"   ibmcloud acr login [-r REGISTRY] [--iam-api-key API_KEY]\n\n" +
 					"   This command is the Apple `container` CLI equivalent of\n" +
 					"   'ibmcloud cr login --client docker' / '--client podman'.",
 				Flags: []plugin.Flag{
@@ -75,8 +75,8 @@ func (p *Plugin) Run(c plugin.PluginContext, args []string) {
 
 	if len(args) == 0 {
 		ui.Failed("No command specified. Usage: %s or %s",
-			terminal.CommandColor("ibmcloud cr-container login"),
-			terminal.CommandColor("ibmcloud crc login"))
+			terminal.CommandColor("ibmcloud apple-container login"),
+			terminal.CommandColor("ibmcloud acr login"))
 		os.Exit(1)
 	}
 

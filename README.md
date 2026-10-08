@@ -1,4 +1,4 @@
-# ibmcloud-cr-container
+# ibmcloud-apple-container
 
 An IBM Cloud CLI plug-in that authenticates [Apple's `container` CLI](https://github.com/apple/container)
 against IBM Cloud Container Registry.
@@ -12,12 +12,12 @@ here. This plug-in provides the equivalent workflow instead:
 ```sh
 ibmcloud cr login --client docker      # existing, built into the cr plug-in
 ibmcloud cr login --client podman      # existing, built into the cr plug-in
-ibmcloud crc login                     # this plug-in (alias: cr-container)
+ibmcloud acr login                     # this plug-in (alias: apple-container)
 ```
 
 ## What it does
 
-`ibmcloud crc login` (or `ibmcloud cr-container login`):
+`ibmcloud acr login` (or `ibmcloud apple-container login`):
 
 1. Confirms you are logged in to IBM Cloud (`ibmcloud login`) or that you
    supplied an API key via `--iam-api-key`.
@@ -27,13 +27,15 @@ ibmcloud crc login                     # this plug-in (alias: cr-container)
 4. Runs `container registry login DOMAIN --username USER --password-stdin`,
    piping in your IAM bearer token (or API key) so it's never exposed in the
    process list or shell history.
+5. Configures the macOS Keychain Access List to authorize `container` daemon
+   binaries so push/pull operations run without prompt/error.
 
 ## Usage
 
 ```sh
-ibmcloud crc login [-r REGISTRY] [--iam-api-key API_KEY]
+ibmcloud acr login [-r REGISTRY] [--iam-api-key API_KEY]
 # or
-ibmcloud cr-container login [-r REGISTRY] [--iam-api-key API_KEY]
+ibmcloud apple-container login [-r REGISTRY] [--iam-api-key API_KEY]
 ```
 
 | Flag | Description |
@@ -46,13 +48,13 @@ ibmcloud cr-container login [-r REGISTRY] [--iam-api-key API_KEY]
 Requires Go 1.22+.
 
 ```sh
-go build -o ibmcloud-cr-container .
+go build -o ibmcloud-apple-container .
 ```
 
 ## Install locally
 
 ```sh
-ibmcloud plugin install -f ./ibmcloud-cr-container
+ibmcloud plugin install -f ./ibmcloud-apple-container
 ```
 
 ## Test
@@ -64,5 +66,5 @@ go test ./...
 ## Uninstall
 
 ```sh
-ibmcloud plugin uninstall cr-container
+ibmcloud plugin uninstall apple-container
 ```

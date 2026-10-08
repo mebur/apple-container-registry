@@ -7,7 +7,8 @@
 // standalone plugin, since the official `ibmcloud cr` plugin is not an open
 // source project that can be patched directly. Once installed, it exposes:
 //
-//	ibmcloud cr-container login
+//	ibmcloud apple-container login
+//	ibmcloud acr login
 //
 // which is the `container` CLI equivalent of the existing
 //
